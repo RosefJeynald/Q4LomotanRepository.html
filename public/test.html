@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Q - Modified Graded Exercise</title>
+
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e9e9e9, #ffffff);
+  font-family: Tahoma, Verdana, sans-serif;
+}
+
+form {
+  width: 700px;
+  padding: 30px;
+  border-radius: 15px;
+  background-color: #f7f7f7;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+h2, h3 {
+  text-align: center;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.stars {
+  font-size: 28px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.star {
+  color: #ccc;
+}
+
+.star.active {
+  color: gold;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #1976d2;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #125ca1;
+}
+
+.movie-item {
+  background: #eeeeee;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-btn {
+  background-color: crimson;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: darkred;
+}
+</style>
+</head>
+
+<body>
+
+<form id="addMovie">
+
+<h2>Add a Movie</h2>
+
+<label for="title"><b>Title:</b></label>
+<input type="text" id="title" required>
+
+<label for="year"><b>Year:</b></label>
+<input type="number" id="year" required>
+
+<label for="genre"><b>Genre:</b></label>
+<select id="genre" required>
+  <option value="Action">Action</option>
+  <option value="Sci-Fi">Sci-Fi</option>
+  <option value="Thriller">Thriller</option>
+  <option value="Horror">Horror</option>
+  <option value="Drama">Drama</option>
+  <option value="Romance">Romance</option>
+  <option value="Musical">Musical</option>
+</select>
+
+<label><b>Rating:</b></label>
+<div class="stars">
+  <span class="star">&#9733;</span>
+  <span class="star">&#9733;</span>
+  <span class="star">&#9733;</span>
+  <span class="star">&#9733;</span>
+  <span class="star">&#9733;</span>
+</div>
+
+<button type="submit">Add / Update Movie</button>
+
+<h3>Movie List</h3>
+<div id="movieList"></div>
+
+</form>
+
+<script>
+
+let rating = 0;
+const stars = document.querySelectorAll(".star");
+const movieList = document.getElementById("movieList");
+
+// ⭐ STAR CLICK (simple version)
+stars.forEach((star, index) => {
+  star.onclick = () => {
+    rating = index + 1;
+    stars.forEach((s, i) => {
+      s.classList.toggle("active", i < rating);
+    });
+  };
+});
+
+// ✅ DISPLAY MOVIES
+function displayMovies() {
+  movieList.innerHTML = "";
+  const movies = JSON.parse(localStorage.getItem("movies")) || [];
+
+  movies.forEach((movie, index) => {
+
+    const div = document.createElement("div");
+    div.className = "movie-item";
+
+    const starDisplay = "★".repeat(movie.rating);
+
+    div.innerHTML = `
+      <span>
+      ${movie.title} (${movie.year}) - ${movie.genre}, Rating:
+      <span style="color:gold;">${starDisplay}</span>
+      </span>
+      <button class="delete-btn" onclick="deleteMovie(${index})">Delete</button>
+    `;
+
+    movieList.appendChild(div);
+  });
+}
+
+// ✅ ADD / UPDATE MOVIE
+document.getElementById("addMovie").onsubmit = function(e) {
+  e.preventDefault();
+
+  const title = document.getElementById("title").value.trim();
+  const year = document.getElementById("year").value;
+  const genre = document.getElementById("genre").value;
+
+  let movies = JSON.parse(localStorage.getItem("movies")) || [];
+
+  // Check if movie title already exists
+  const existingIndex = movies.findIndex(m => 
+    m.title.toLowerCase() === title.toLowerCase()
+  );
+
+  if (existingIndex !== -1) {
+    // UPDATE + AVERAGE RATING
+    const oldRating = movies[existingIndex].rating;
+    const newAverage = Math.round((oldRating + rating) / 2);
+
+    movies[existingIndex] = {
+      title,
+      year,
+      genre,
+      rating: newAverage
+    };
+
+  } else {
+    // ADD NEW
+    movies.push({
+      title,
+      year,
+      genre,
+      rating
+    });
+  }
+
+  localStorage.setItem("movies", JSON.stringify(movies));
+
+  this.reset();
+  rating = 0;
+  stars.forEach(s => s.classList.remove("active"));
+
+  displayMovies();
+};
+
+// ✅ DELETE MOVIE
+function deleteMovie(index) {
+  const confirmDelete = confirm("Are you sure you want to delete this movie?");
+  
+  if (confirmDelete) {
+    let movies = JSON.parse(localStorage.getItem("movies")) || [];
+    movies.splice(index, 1);
+    localStorage.setItem("movies", JSON.stringify(movies));
+    displayMovies();
+  }
+}
+
+// Load on page refresh
+displayMovies();
+
+</script>
+
+</body>
+</html>

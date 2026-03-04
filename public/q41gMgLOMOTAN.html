@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Q4 1st Graded Exercise">
+<meta name="keywords" content="CRUD Operations">
+<meta name="author" content="RJ Lomotan">
+<title>4Q - 1st Graded</title>
+  <style>
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f0f0f0, #ffffff99);
+      font-family: Tahoma, Verdana, "sans-serif";
+    }
+
+    form {
+      width: 650px;
+      padding: 30px;
+      border-radius: 15px;
+      background-color: #ffffff8b;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    b {
+      font-size: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .stars {
+      font-size: 40px;
+      margin-bottom: 25px;
+      cursor: pointer;
+    }
+
+    .star {
+      color: #cbcbcb84;
+    }
+
+    .star.checked {
+      color: rgb(255, 224, 47);
+    }
+
+    button {
+      width: 650px;
+      padding: 15px;
+      border: none;
+      border-radius:10px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #3c8fe2;
+      color: white;
+      }
+
+    button:hover {
+      background-color: #7fbcf9;
+    }
+
+  </style>
+</head>
+<body> 
+<section>
+  <form id="addMovie">
+
+    <h2> Add a Movie </h2> 
+
+      <label>
+      <b> Title: </b> <br>  
+        <input type="text" name="title" required/> <br> <br>
+      </label>
+
+      <label>
+      <b> Year: </b> <br>
+        <input type="number" name="year" required/> <br> <br>
+      </label>
+
+      <label>
+      <b> Genre: </b> <br>
+        <select name="genre" required>
+          <option value="action">Action</option>
+          <option value="sci-fi">Sci-Fi</option>
+          <option value="thriller">Thriller</option>
+          <option value="horror">Horror</option>
+          <option value="drama">Drama</option>
+          <option value="romance">Romance</option>
+          <option value="musical">Musical</option>
+        </select> <br> <br>
+      </label>
+
+      <label>
+      <b> Rating: </b>
+      <div class="stars" required>
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+      </div>
+      </label>
+
+      <button type="submit"> Add Movie </button>
+
+
+
+  </form>
+</section>
+
+<script>
+let rating = 0;
+const stars = document.querySelectorAll(".star");
+const movieList = document.createElement("div");
+document.querySelector("form").appendChild(movieList);
+
+//star checker
+stars.forEach((star, index) => {
+  star.onclick = () => {
+    rating = index + 1; 
+
+    stars.forEach((s, i) => {
+      s.classList.toggle("checked", i < rating);
+    });
+  };
+});
+//star checker
+
+//display
+function displayMovies() {
+  movieList.innerHTML = "";
+
+  const movies = JSON.parse(localStorage.getItem("movies")) || [];
+
+  movies.forEach(movie => {
+    const div = document.createElement("div");
+    div.style.padding = "12px";
+    div.style.marginBottom = "10px";
+    div.style.background = "#eee";
+    div.style.borderRadius = "8px";
+
+    let starDisplay = "★".repeat(movie.rating);
+
+    div.innerHTML = 
+      `${movie.title} (${movie.year}) - ${movie.genre}, Rating: 
+      <span style="color:rgb(255, 224, 47); font-size:18px;">${starDisplay}</span>`;
+
+    movieList.appendChild(div);
+  });
+}
+//display
+
+
+</script>
+</body>
+</html>
