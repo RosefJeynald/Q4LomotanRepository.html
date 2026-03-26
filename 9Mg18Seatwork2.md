@@ -96,16 +96,23 @@
     * What changes that you have to do on the code that will position .notice box on the top right corner of the .content box? Please write the code on paper as well (both html and css on the part of .notice and .content).
     - Answer: The left: 400px will have to be changed into left" 430px.
     * Try to change the position of .content to relative then to fixed. What do you observed each time?
-    - Answer: When the position of .content was changed to relative, it moved relative to the page. W
+    - Answer: When the position of .content was changed to relative, it moved relative to the page. When it changed to fixed, it returned to it's place near the sidebar.
     * What do you observe on about the effect of z-index on .notice and .content boxes?
-    - Answer -
+    - Answer: It moves the position of the boxes back or forward, where the higher z-index gets to be on top of the lower z-index box.
 
 3. Please answer the following reflection questions (15 minutes)
 
     a. Could you summarize the differences between the CSS position values (static, relative, absolute, fixed)? 
+    - Answer: Static – Follows normal page flow. 
+              Relative – Moves relative to its original spot. 
+              Absolute – Positioned based on nearest positioned parent.
+              Fixed – Stays in the same spot on the screen. (even when scrolling)
 
     b. How does absolute positioning depend on its parent element?
+    - Answer: It uses the nearest parent's position as it's reference, then moves off that.
 
     c. How do you differentiate sticky from fixed (you can research on sticky)?
+    - Answer: Sticky acts normal, then sticks to the page when you scroll to a certain point. Fixed always stays at the same position even when scrolling.
 
     d. If you were designing a webpage for a school event, how might you use positioning to highlight important information? Please give concrete examples.
+    - Answer: Using fixed for a top navigation bar so it's always visible, same with the footer. Not only that, I can use relative to alter the positioning of images and text better and for the design to be more eye catching and appealing to the viewer.
